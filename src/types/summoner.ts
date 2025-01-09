@@ -13,12 +13,12 @@ export class Summoner {
     flexLeague: League | null;
 
     constructor(
-        puuid: string, 
-        id: string, 
-        accountId: string, 
-        gameName: string, 
-        tagLine: string, 
-        iconId: number, 
+        puuid: string,
+        id: string,
+        accountId: string,
+        gameName: string,
+        tagLine: string,
+        iconId: number,
         level: number,
         server: string
     ) {
@@ -33,4 +33,18 @@ export class Summoner {
         this.soloLeague = null;
         this.flexLeague = null;
     }
+}
+
+// La norme serait plus d'utiliser type ou interface, mais peut etre que dans ton cas c'est mieu une classe jsp:
+export type Summonerr = {
+    puuid: string;
+    id: string;
+    accountId: string;
+    gameName: string;
+    tagLine: string;
+    iconId: number;
+    level: number;
+    server: string;
+    soloLeague: League | null;
+    flexLeague: League | null;
 }

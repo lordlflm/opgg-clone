@@ -1,6 +1,6 @@
 <script lang="ts">
-  import SummonerSearchForm from "../components/summoner-search-form.svelte";
-  import TopSummonersDisplay from "../components/top-summoners-display.svelte";
+  import SummonerSearchForm from "$lib/components/summoner-search-form.svelte";
+  import TopSummonersDisplay from "$lib/components/top-summoners-display.svelte";
 </script>
 
 <main class="container">
