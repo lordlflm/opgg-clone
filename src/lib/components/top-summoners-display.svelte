@@ -1,36 +1,34 @@
 <script lang="ts">
   import { invoke } from "@tauri-apps/api/core";
-  import { Summoner } from "../types/summoner";
-  import { region_tag_to_region } from "../utils";
+  import { Summoner } from "../../types/summoner";
   import { onMount } from "svelte";
+    import { region_tag_to_region } from "$lib/utils/utils";
 
   let rankTypeSelect: HTMLSelectElement;
-  let topPlayersContainerDiv :HTMLDivElement;
+  let topPlayersContainerDiv: HTMLDivElement;
 
-  onMount(() => {
-    onRankTypeSelectChange()
+  let topSummoners: Summoner[] = [];
+
+  onMount(async () => {
+    await onRankTypeSelectChange();
   });
 
   async function onRankTypeSelectChange() {
-    console.log(rankTypeSelect!)
+    console.log(rankTypeSelect!);
     const rankType = rankTypeSelect!.value;
 
     if (rankType === "flex") {
-      display_top_players_cards(await fetch_top_players("RANKED_FLEX_SR"));
+      topSummoners = await fetch_top_players("RANKED_FLEX_SR");
     } else {
-        display_top_players_cards(await fetch_top_players("RANKED_SOLO_5x5"));
-    }
-  };
-
-  function display_top_players_cards(top_summoners: Array<Summoner>) {
-    for (let summoner of top_summoners) {
-      display_summoner(summoner);
+      topSummoners = await fetch_top_players("RANKED_SOLO_5x5");
     }
   }
 
   async function fetch_top_players(queueType: string) {
-    const top_players: Array<any> | string = await invoke("get_top_players", { queue: queueType });
-    console.log(top_players)
+    const top_players: Array<any> | string = await invoke("get_top_players", {
+      queue: queueType,
+    });
+    console.log(top_players);
     let top_players_array: Array<Summoner> = new Array();
     if (top_players.length != 0) {
       for (let player of top_players) {
@@ -43,14 +41,14 @@
             player.tagLine.slice(1, -1),
             player.profileIconId,
             player.summonerLevel,
-            region_tag_to_region(player.region)
+            region_tag_to_region(player.region),
           );
 
           // TODO
           // summoner_object.soloLeague.leaguePoints = player.leaguePoints;
           // summoner_object.soloLeague.wins = player.wins;
           // summoner_object.soloLeague.losses = player.losses;
-          
+
           top_players_array.push(summoner_object);
         }
       }
@@ -68,7 +66,9 @@
     summoner_div.id = "top-player-div";
     let summoner_anchor = document.createElement("a");
     summoner_anchor.href = `summoner.html?gameName=${encodeURIComponent(summoner.gameName)}&region=${encodeURIComponent(summoner.server)}&puuid=${summoner.puuid}`;
-    let region = document.createTextNode(`Top challenger of ${summoner.server}`);
+    let region = document.createTextNode(
+      `Top challenger of ${summoner.server}`,
+    );
     // TODO
     // let winrate = document.createTextNode(`${summoner.soloLeague.wins} wins / ${summoner.soloLeague.losses} losses (${Math.round(summoner.soloLeague.wins/(summoner.soloLeague.wins + summoner.soloLeague.losses) * 100)}% winrate)`);
     // let lp = document.createTextNode(`Challenger ${summoner.soloLeague.leaguePoints} LP`);
@@ -92,15 +92,21 @@
 </script>
 
 <main class="container">
-    <div id="top-players-container-div" bind:this={topPlayersContainerDiv}> 
-
-        <h2 id="top-players-h2">Top players</h2>
-        <select id="rank-type-select" bind:this={rankTypeSelect} on:change={onRankTypeSelectChange}>
-          <option value="solo">Ranked Solo/Duo</option>
-          <option value="flex">Ranked Flex</option>
-        </select>
-    
-      </div>
+  <div id="top-players-container-div" bind:this={topPlayersContainerDiv}>
+    <h2 id="top-players-h2">Top players</h2>
+    <select
+      id="rank-type-select"
+      bind:this={rankTypeSelect}
+      on:change={onRankTypeSelectChange}
+    >
+      <option value="solo">Ranked Solo/Duo</option>
+      <option value="flex">Ranked Flex</option>
+    </select>
+  </div>
 </main>
+
+{#each await topSummoners as summoner}
+  <SummonerPreviewCard {summoner} />
+{/each}
 
 <style></style>
