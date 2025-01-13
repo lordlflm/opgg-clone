@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { invoke } from "@tauri-apps/api/core";
+  import { invoke } from "@tauri-apps/api/core";
 
   let summonerInvalidDiv;
   let summonerNameInvalid;
@@ -7,24 +7,25 @@
   let summonerRegionInvalid;
   let summonerInvalid;
 
-  let validRegions = [
-    "north america", 
-    "korea", 
-    "middle east", 
-    "europe west", 
-    "europe nordic & east", 
-    "oceania", 
-    "japan", 
-    "brazil",
-    "LAS", 
-    "LAN", 
-    "russia", 
-    "turkiye", 
-    "singapore", 
-    "philippines", 
-    "taiwan", 
-    "vietnam", 
-    "thailand"
+  const validRegions = [
+    { value: "", label: "Select region" },
+    { value: "north america", label: "North America" },
+    { value: "korea", label: "Korea" },
+    { value: "middle east", label: "Middle East" },
+    { value: "europe west", label: "Europe West" },
+    { value: "europe nordic & east", label: "Europe Nordic & East" },
+    { value: "oceania", label: "Oceania" },
+    { value: "japan", label: "Japan" },
+    { value: "brazil", label: "Brazil" },
+    { value: "LAS", label: "LAS" },
+    { value: "LAN", label: "LAN" },
+    { value: "russia", label: "Russia" },
+    { value: "turkiye", label: "Türkiye" },
+    { value: "singapore", label: "Singapore" },
+    { value: "philippines", label: "Philippines" },
+    { value: "taiwan", label: "Taiwan" },
+    { value: "vietnam", label: "Vietnam" },
+    { value: "thailand", label: "Thailand" },
   ];
 
   async function onSummonerSubmit (event: any) {
@@ -49,7 +50,11 @@
       } else {
         summonerTagInvalid!.textContent = "";
       }
-      if (!validRegions.includes(data["summoner-region"].toString())) {
+      if (
+        !validRegions
+          .map((validRegion) => validRegion.label)
+          .includes(data["summoner-region"].toString())
+      ) {
         summonerInvalidDiv!.style.display = "block";
         summonerRegionInvalid!.textContent = "invalid region";
         invalidFlag++;
@@ -92,24 +97,9 @@
       
             <label for="summoner-region" hidden>Summoner region</label>
             <select name="summoner-region" id="summoner-region">
-              <option value="">Select region</option>
-              <option value="north america">North America</option>
-              <option value="korea">Korea</option>
-              <option value="middle east">Middle East</option>
-              <option value="europe west">Europe West</option>
-              <option value="europe nordic & east">Europe Nordic & East</option>
-              <option value="oceania">Oceania</option>
-              <option value="japan">Japan</option>
-              <option value="brazil">Brazil</option>
-              <option value="LAS">LAS</option>
-              <option value="LAN">LAN</option>
-              <option value="russia">Russia</option>
-              <option value="turkiye">Türkiye</option>
-              <option value="singapore">Singapore</option>
-              <option value="philippines">Philippines</option>
-              <option value="taiwan">Taiwan</option>
-              <option value="vietnam">Vietnam</option>
-              <option value="thailand">Thailand</option>
+              {#each validRegions as region}
+                <option value={region.value}>{region.label}</option>
+              {/each}
             </select>
           </div>
           <div id="summoner-invalid-div" bind:this={summonerInvalidDiv}>
