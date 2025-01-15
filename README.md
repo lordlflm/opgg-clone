@@ -1,7 +1,6 @@
-# Tauri + SvelteKit + TypeScript
-
-This template should help get you started developing with Tauri, SvelteKit and TypeScript in Vite.
-
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer).
+# OP.GG clone desktop app
+## Developping
+1. Install Rust
+2. `npm install`
+3. Create `.env` file and paste your riot api key as `RIOT_API_KEY`
+4. `npm run tauri dev`
