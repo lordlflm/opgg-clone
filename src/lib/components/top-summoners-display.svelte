@@ -93,7 +93,9 @@
         {#each topSummonersArray! as summoner}
           <div id="summoner-card-div">
             <!-- TODO change route -->
-            <a href="/">
+            <a
+              href="summoner?gameName={summoner.gameName}&tagLine={summoner.tagLine}&region={summoner.server}&puuid={summoner.puuid}"
+            >
               <h3 id="region-h3">Top player of {summoner.server} server</h3>
               <img
                 src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{summoner.iconId}.jpg"

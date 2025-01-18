@@ -2,7 +2,7 @@
   import { invoke } from "@tauri-apps/api/core";
 
   import { validRegions } from "$lib/utils/utils";
-    import { goto } from "$app/navigation";
+  import { goto } from "$app/navigation";
 
   let summonerInvalidDiv;
   let summonerNameInvalid;
@@ -35,7 +35,8 @@
     if (
       !validRegions
         .map((validRegion) => validRegion.value)
-        .includes(data["summoner-region"].toString())
+        .includes(data["summoner-region"].toString()) ||
+      data["summoner-region"] == ""
     ) {
       summonerRegionInvalid!.textContent = "invalid region";
       invalidFlag++;
@@ -49,6 +50,7 @@
     if (invalidFlag == 0) {
       try {
         const response: any = await invoke("get_account_by_gamename", { data });
+        console.log(response);
         if (response.success === "true") {
           summonerInvalid!.textContent = "";
           const queryParams = new URLSearchParams();

@@ -1,7 +1,8 @@
 import type { Summoner } from "./summoner";
+import type { Participant } from "./participant";
 
 export interface Match {
-    victory: boolean | null;
-    queueType: string | null;
-    participants: Array<Summoner>;
+    queueType: string;
+    duration: number;
+    participants: Array<Participant>;
 }

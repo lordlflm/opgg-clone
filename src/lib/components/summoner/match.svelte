@@ -1,0 +1,97 @@
+<script lang="ts">
+    import type { Match } from "$lib/types/match";
+    import type { Summoner } from "$lib/types/summoner";
+    import { itemIdToAssetName } from "$lib/utils/utils";
+
+    export let match: Match;
+    export let summoner: Summoner;
+
+    let summonerChampionId: string = getSummonerChampionId();
+    let matchDuration: string = formatMatchDuration();
+    let summonerKDA: string = getSummonerKDA();
+    let summonerItemsPath: Array<string> = getSummonerItemsPath();
+
+    function formatMatchDuration(): string {
+        let hours = Math.floor(match.duration / 3600); // Total hours
+        let minutes = Math.floor((match.duration % 3600) / 60); // Remaining minutes
+        let seconds = match.duration % 60; // Remaining seconds
+
+        return hours > 0
+            ? `${hours}h ${minutes}m ${seconds}s`
+            : `${minutes}m ${seconds}s`;
+    }
+
+    function getSummonerChampionId(): string {
+        for (let participant of match.participants) {
+            if (participant.puuid == summoner.puuid) {
+                return participant.championId.toString();
+            }
+        }
+        return "";
+    }
+
+    function getSummonerKDA(): string {
+        for (let participant of match.participants) {
+            if (participant.puuid == summoner.puuid) {
+                return participant.deaths == 0
+                    ? `${participant.kills}/${participant.deaths}/${participant.assists} (${participant.kills + participant.assists}:1 KDA)`
+                    : `${participant.kills}/${participant.deaths}/${participant.assists} (${((participant.kills + participant.assists) / participant.deaths).toFixed(2)}:1 KDA)`;
+            }
+        }
+        return "";
+    }
+
+    function getSummonerItemsPath(): Array<string> {
+        let itemsPath: Array<string> = [];
+
+        for (let participant of match.participants) {
+            if (participant.puuid == summoner.puuid) {
+                for (let item of participant.items) {
+                    // TODO I guess some icons arent available in community dragon
+                    // yet. The icon is determined by a huge switch case in utility.ts.
+                    // If thoses icons are added we need to add them manually. Find an alternative.
+
+                    // TODO default empty icon can be replaced by css also.
+                    itemsPath.push(itemIdToAssetName(item));
+                }
+            }
+        }
+        return itemsPath;
+    }
+</script>
+
+<main>
+    <div id="match-div">
+        <!--TODO queue type-->
+        <p id="queue-type-p"></p>
+        <img
+            id="summoner-champion-icon"
+            src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/{summonerChampionId}.png"
+            alt="Couldn't fetch champion icon"
+        />
+        <p id="game-duration-p">{matchDuration}</p>
+        <div id="items-div">
+            {#each summonerItemsPath as item}
+                <img
+                    src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/{item}.png"
+                    alt="Couldn't fetch icon of item with id {item}"
+                />
+            {/each}
+        </div>
+        <div id="summoner-spells-div">
+            <img src="" alt="Couldn't fetch spell 1 icon" />
+            <img src="" alt="Couldn't fetch spell 2 icon" />
+        </div>
+        <div id="runes-div">
+            <img src="" alt="Couldn't fetch primary rune icon" />
+            <img src="" alt="Couldn't fetch secondary rune icon" />
+        </div>
+        <p id="kda-p">{summonerKDA}</p>
+        <div id="participants-div">
+            
+        </div>
+    </div>
+</main>
+
+<style>
+</style>

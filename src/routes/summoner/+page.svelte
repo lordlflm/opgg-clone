@@ -4,36 +4,30 @@
     import { onMount } from "svelte";
 
     import type { Summoner } from "$lib/types/summoner";
-    import { RANKED_FLEX_LEAGUE, RANKED_SOLO_LEAGUE } from "$lib/utils/utils";
+    import {
+        RANKED_FLEX_LEAGUE,
+        RANKED_SOLO_LEAGUE,
+        tierValues,
+    } from "$lib/utils/utils";
     import type { League } from "$lib/types/league";
-
-    // console.log(page.url.searchParams.get('gameName'))
+    import type { Match } from "$lib/types/match";
+    import type { Participant } from "$lib/types/participant";
+    import MatchComponent from "$lib/components/summoner/match.svelte";
 
     // TODO why was this here
     // class Participant {
     //     constructor
     // }
 
-    const tierValues = new Map([
-        ["IRONS", 0],
-        ["BRONZE", 1],
-        ["SILVER", 2],
-        ["GOLD", 3],
-        ["PLATINUM", 4],
-        ["EMERALD", 5],
-        ["DIAMOND", 6],
-        ["MASTER", 7],
-        ["GRANDMASTER", 8],
-        ["CHALLENGER", 9],
-    ]);
-
     let rankTypeSelect: HTMLSelectElement;
+    let selectedRankType: string = RANKED_SOLO_LEAGUE;
 
     let queryParams = page.url.searchParams;
     let summonerFetched = false;
     let summoner: Summoner;
     // highest tier between solo and flex queue. Used to determine which rank icon to display
     let summonerHighestTier: string | null = null;
+    let matches: Array<Match> = [];
 
     onMount(async () => {
         try {
@@ -67,20 +61,60 @@
                 }
             }
 
-            //call to `/lol/match/v5/matches/by-puuid/{puuid}/ids` endpoint
+            // call to `/lol/match/v5/matches/by-puuid/{puuid}/ids` endpoint
             // TODO later
-            // const matches = await invoke("get_matches", {
-            //     puuid: summoner.puuid,
-            //     region: summoner.server,
-            // });
+            const matchesData: any = await invoke("get_matches", {
+                puuid: queryParams.get("puuid")!,
+                region: queryParams.get("region")!,
+            });
 
-            // if (matches.length != 0) {
-            //     console.debug("yessss");
-            // } else {
-            //     console.error(
-            //         "Error while fetching endpoint `/lol/match/v5/matches/by-puuid/{puuid}/ids`",
-            //     );
-            // }
+            console.log(matchesData);
+
+            if (matchesData.length > 0) {
+                for (let matchData of matchesData) {
+                    let participants: Array<Participant> = [];
+                    for (let participantData of matchData["info"][
+                        "participants"
+                    ]) {
+                        const participant: Participant = {
+                            gameName: participantData["summonerName"],
+                            tagLine: participantData["riotIdTagline"],
+                            puuid: participantData["puuid"],
+                            champion: participantData["championName"],
+                            championId: participantData["championId"],
+                            championLevel: participantData["champLevel"],
+                            lane: participantData["individualPosition"],
+                            items: [
+                                participantData["item0"],
+                                participantData["item1"],
+                                participantData["item2"],
+                                participantData["item3"],
+                                participantData["item4"],
+                                participantData["item5"],
+                                participantData["item6"],
+                            ],
+                            kills: participantData["kills"],
+                            deaths: participantData["deaths"],
+                            assists: participantData["assists"],
+                            goldEarned: participantData["goldEarned"],
+                            summonerSpell1: participantData["summoner1Id"],
+                            summonerSpell2: participantData["summoner2Id"],
+                        };
+                        participants.push(participant);
+                    }
+                    const match: Match = {
+                        queueType: matchData["info"]["gameType"],
+                        duration: matchData["info"]["gameDuration"],
+                        participants: participants,
+                    };
+                    matches.push(match);
+                }
+                console.log(matches);
+            } else {
+                console.error(
+                    "Error while fetching endpoint `/lol/match/v5/matches/by-puuid/{puuid}/ids`",
+                );
+            }
 
             summoner = {
                 puuid: queryParams.get("puuid")!,
@@ -153,15 +187,6 @@
                         losses: league.losses,
                     };
                     leagues.push(leagueObject);
-
-                    // TODO add this logic outside this function when leaghues are set
-                    // if (
-                    //     summoner.highestTier == null ||
-                    //     tierValues.get(summoner.soloLeague.tier)! >
-                    //         tierValues.get(summoner.highestTier)
-                    // ) {
-                    //     summoner.highestTier = summoner.soloLeague.tier;
-                    // }
                 }
             }
             return leagues;
@@ -173,13 +198,9 @@
         }
     }
 
-    // async function onRankTypeSelectChange() {
-    //     if (rankTypeSelect!.value === "flex") {
-    //         displayFlexRank();
-    //     } else {
-    //         displaySoloRank();
-    //     }
-    // }
+    async function onRankTypeSelectChange() {
+        selectedRankType = rankTypeSelect.value;
+    }
 </script>
 
 <main>
@@ -193,6 +214,7 @@
                         alt="rank icon not found"
                     />
                 {/if}
+                <!-- TODO replace alt with fallback profile icon -->
                 <img
                     id="icon"
                     src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{summoner.iconId}.jpg"
@@ -208,12 +230,16 @@
         </div>
 
         <div id="rank-div">
-            <select id="rank-type-select" bind:this={rankTypeSelect}>
+            <select
+                id="rank-type-select"
+                bind:this={rankTypeSelect}
+                on:change={onRankTypeSelectChange}
+            >
                 <option value={RANKED_SOLO_LEAGUE}>Ranked Solo/Duo</option>
                 <option value={RANKED_FLEX_LEAGUE}>Ranked Flex</option>
             </select>
             <div id="current-rank-div">
-                {#if (rankTypeSelect?.value || RANKED_SOLO_LEAGUE) == RANKED_SOLO_LEAGUE}
+                {#if selectedRankType == RANKED_SOLO_LEAGUE}
                     {#if summoner.soloLeague}
                         <p id="rank-p">
                             {summoner.soloLeague?.tier +
@@ -232,10 +258,10 @@
                             )}% winrate)
                         </p>
                     {:else}
-                        <!-- TODO better -->
+                        <!-- TODO better with css -->
                         <p>Summoner is unranked</p>
                     {/if}
-                {:else if (rankTypeSelect?.value || RANKED_FLEX_LEAGUE) == RANKED_FLEX_LEAGUE}
+                {:else if selectedRankType == RANKED_FLEX_LEAGUE}
                     {#if summoner.flexLeague}
                         <p id="rank-p">
                             {summoner.flexLeague?.tier +
@@ -260,7 +286,11 @@
             </div>
         </div>
 
-        <div id="matches"></div>
+        <div id="matches">
+            {#each matches as match}
+                <MatchComponent {match} {summoner} />
+            {/each}
+        </div>
     {/if}
 </main>
 
