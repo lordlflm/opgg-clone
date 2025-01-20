@@ -13,28 +13,6 @@ lazy_static! {
     };
 }
 
-struct Summoner {
-    gamne_name: String,
-    tag_line: String,
-    puuid: String,
-}
-
-struct Participant {
-    summoner: Summoner,
-    champion_name: String,
-    champion_id: u32,
-    lane: String,
-    items: Vec<u32>,
-    kills: u32,
-    deaths: u32,
-    assists: u32,
-    gold_earned: u32,
-}
-
-struct Match {
-    paticipants: Vec<Participant>,
-}
-
 /// Fetches endpoint `/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}`
 /// of `ACCOUNT-V1` API
 ///
@@ -223,9 +201,16 @@ pub async fn get_matches_id_from_puuid(
     Ok(matches_response)
 }
 
-pub async fn get_matches_from_id(match_id: String) -> Result<Value, Error> {
+pub async fn get_matches_from_id(match_id: String, region: String) -> Result<Value, Error> {
+    let region_continent: String;
+    match get_region_continent(&region) {
+        Ok(continent) => region_continent = continent,
+        Err(_) => return Ok(Value::Null),
+    }
+
     let url = format!(
-        "https://americas.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={api_key}",
+        "https://{region_continent}.api.riotgames.com/lol/match/v5/matches/{match_id}?api_key={api_key}",
+        region_continent = region_continent,
         match_id = match_id,
         api_key = *RIOT_API_KEY
     );

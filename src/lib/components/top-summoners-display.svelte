@@ -92,7 +92,6 @@
       {#if topSummonersFetched}
         {#each topSummonersArray! as summoner}
           <div id="summoner-card-div">
-            <!-- TODO change route -->
             <a
               href="summoner?gameName={summoner.gameName}&tagLine={summoner.tagLine}&region={summoner.server}&puuid={summoner.puuid}"
             >

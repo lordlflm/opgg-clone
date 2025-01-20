@@ -12,12 +12,8 @@
     import type { League } from "$lib/types/league";
     import type { Match } from "$lib/types/match";
     import type { Participant } from "$lib/types/participant";
-    import MatchComponent from "$lib/components/summoner/match.svelte";
 
-    // TODO why was this here
-    // class Participant {
-    //     constructor
-    // }
+    import MatchComponent from "$lib/components/summoner/match.svelte";
 
     let rankTypeSelect: HTMLSelectElement;
     let selectedRankType: string = RANKED_SOLO_LEAGUE;
@@ -77,7 +73,7 @@
                         "participants"
                     ]) {
                         const participant: Participant = {
-                            gameName: participantData["summonerName"],
+                            gameName: participantData["riotIdGameName"],
                             tagLine: participantData["riotIdTagline"],
                             puuid: participantData["puuid"],
                             champion: participantData["championName"],
@@ -99,13 +95,31 @@
                             goldEarned: participantData["goldEarned"],
                             summonerSpell1: participantData["summoner1Id"],
                             summonerSpell2: participantData["summoner2Id"],
+                            teamId: participantData["teamId"],
+                            minionKilled:
+                                participantData["totalMinionsKilled"] +
+                                participantData["neutralMinionsKilled"],
+                            totalDamageDealtToChampions:
+                                participantData["totalDamageDealtToChampions"],
+                            totalDamageTaken:
+                                participantData["totalDamageTaken"],
                         };
                         participants.push(participant);
                     }
+
+                    let winningTeam: number;
+                    for (let team of matchData["info"]["teams"]) {
+                        if (team["win"] === true) {
+                            winningTeam = team["teamId"];
+                            break;
+                        }
+                    }
+
                     const match: Match = {
                         queueType: matchData["info"]["gameType"],
                         duration: matchData["info"]["gameDuration"],
                         participants: participants,
+                        winningTeam: winningTeam!,
                     };
                     matches.push(match);
                 }

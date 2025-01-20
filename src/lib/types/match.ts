@@ -5,4 +5,5 @@ export interface Match {
     queueType: string;
     duration: number;
     participants: Array<Participant>;
+    winningTeam: number;
 }

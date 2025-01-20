@@ -21,44 +21,46 @@ async fn main() {
 }
 
 #[tauri::command]
-async fn get_account_by_gamename(data: HashMap<String, String>) -> Result<HashMap<String, String>, String> {
-  let mut response = HashMap::new();
-  let summoner_name: String;
-  let summoner_tag: String;
-  let summoner_region: String;
-  let i: usize;
+async fn get_account_by_gamename(
+    data: HashMap<String, String>,
+) -> Result<HashMap<String, String>, String> {
+    let mut response = HashMap::new();
+    let summoner_name: String;
+    let summoner_tag: String;
+    let summoner_region: String;
+    let i: usize;
 
-  match data.get("summoner-name") { 
-    Some(name) => {
-      match name.find("#") {
-        Some(index) => i = index,
-        None => return Err("Something went wrong: No summoner tag".to_string()),
-      }
-      summoner_name = name[..i].to_string();
-      summoner_tag = name[i+1..].to_string();
-    },
-    None => return Err("Something went wrong: No summoner name".to_string()),
-  }
+    match data.get("summoner-name") {
+        Some(name) => {
+            match name.find("#") {
+                Some(index) => i = index,
+                None => return Err("Something went wrong: No summoner tag".to_string()),
+            }
+            summoner_name = name[..i].to_string();
+            summoner_tag = name[i + 1..].to_string();
+        }
+        None => return Err("Something went wrong: No summoner name".to_string()),
+    }
 
-  match data.get("summoner-region") {
-    Some(region) => summoner_region = region.to_string(),
-    None => return Err("Something went wrong: No summoner region".to_string()),
-  }
+    match data.get("summoner-region") {
+        Some(region) => summoner_region = region.to_string(),
+        None => return Err("Something went wrong: No summoner region".to_string()),
+    }
 
-  match scuttle::get_account_from_gamename(&summoner_name, &summoner_tag).await {
-    Ok(summoner) => {
-      response.insert("success".to_string(), "true".to_string());
-      response.insert("region".to_string(), summoner_region);
-      for (key, value) in &summoner {
-        response.insert(key.to_string(), value.to_string());
-      }
-      return Ok(response);
-    },
-    Err(_) => {
-      response.insert("success".to_string(), "false".to_string());
-      return Ok(response);
-    },
-  }
+    match scuttle::get_account_from_gamename(&summoner_name, &summoner_tag).await {
+        Ok(summoner) => {
+            response.insert("success".to_string(), "true".to_string());
+            response.insert("region".to_string(), summoner_region);
+            for (key, value) in &summoner {
+                response.insert(key.to_string(), value.to_string());
+            }
+            return Ok(response);
+        }
+        Err(_) => {
+            response.insert("success".to_string(), "false".to_string());
+            return Ok(response);
+        }
+    }
 }
 
 #[tauri::command]
@@ -205,21 +207,15 @@ async fn get_top_players(queue: String) -> Result<Vec<HashMap<String, String>>, 
 }
 
 #[tauri::command]
-async fn get_matches(
-    puuid: String,
-    region: String,
-) -> Result<Vec<Value>, String> {
+async fn get_matches(puuid: String, region: String) -> Result<Vec<Value>, String> {
     let mut response = Vec::new();
 
-    match get_matches_id(puuid, region).await {
+    match get_matches_id(puuid, region.clone()).await {
         Ok(matches_id) => {
             // test match id from bakad: NA1_5206297052
             for id in matches_id.clone() {
-                // TODO remove
-                // println!("{:?}", id);
-
                 // TODO this needs to be async
-                match scuttle::get_matches_from_id(id.to_owned()).await {
+                match scuttle::get_matches_from_id(id.to_owned(), region.clone()).await {
                     Ok(match_response) => {
                         response.push(match_response);
                     }

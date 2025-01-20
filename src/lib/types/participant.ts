@@ -12,5 +12,9 @@ export interface Participant {
     assists: number;
     goldEarned: number;
     summonerSpell1: string;
-    summonerSpell2: string
+    summonerSpell2: string;
+    teamId: number;
+    minionKilled: number;
+    totalDamageDealtToChampions: number;
+    totalDamageTaken: number;
 }

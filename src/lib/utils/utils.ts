@@ -678,8 +678,8 @@ export function itemIdToAssetName(id: number) {
       return "6662_tank_t3_iceborngauntlet";
     case 6664:
       return "6664_hollowradiance";
-    case 6664:
-      return "6664_tank_t4_acceleratedchemtank";
+    // case 6664:
+    //   return "6664_tank_t4_acceleratedchemtank";
     case 6665:
       return "6665_tank_t4_jakshotheprotean";
     case 6667:

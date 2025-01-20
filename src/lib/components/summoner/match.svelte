@@ -1,7 +1,10 @@
 <script lang="ts">
     import type { Match } from "$lib/types/match";
+    import type { Participant } from "$lib/types/participant";
     import type { Summoner } from "$lib/types/summoner";
     import { itemIdToAssetName } from "$lib/utils/utils";
+
+    import Team from "./team.svelte";
 
     export let match: Match;
     export let summoner: Summoner;
@@ -10,6 +13,19 @@
     let matchDuration: string = formatMatchDuration();
     let summonerKDA: string = getSummonerKDA();
     let summonerItemsPath: Array<string> = getSummonerItemsPath();
+    let teams: Array<Array<Participant>> = getTeams();
+
+    function getTeams() {
+        let teams: Array<Array<Participant>> = [[], []];
+        for (let participant of match.participants) {
+            if ((participant.teamId = 100)) {
+                teams[0].push(participant);
+            } else {
+                teams[1].push(participant)
+            }
+        }
+        return teams;
+    }
 
     function formatMatchDuration(): string {
         let hours = Math.floor(match.duration / 3600); // Total hours
@@ -78,17 +94,21 @@
                 />
             {/each}
         </div>
+        <!--TODO spell icons-->
         <div id="summoner-spells-div">
             <img src="" alt="Couldn't fetch spell 1 icon" />
             <img src="" alt="Couldn't fetch spell 2 icon" />
         </div>
+        <!--TODO rune icons-->
         <div id="runes-div">
             <img src="" alt="Couldn't fetch primary rune icon" />
             <img src="" alt="Couldn't fetch secondary rune icon" />
         </div>
         <p id="kda-p">{summonerKDA}</p>
         <div id="participants-div">
-            
+            {#each teams as team}
+                <Team {team}/>
+            {/each}
         </div>
     </div>
 </main>
