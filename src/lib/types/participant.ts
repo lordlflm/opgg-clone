@@ -11,10 +11,13 @@ export interface Participant {
     deaths: number;
     assists: number;
     goldEarned: number;
-    summonerSpell1: string;
-    summonerSpell2: string;
+    summonerSpell1: number;
+    summonerSpell2: number;
     teamId: number;
     minionKilled: number;
     totalDamageDealtToChampions: number;
     totalDamageTaken: number;
+    primaryStyleCategorieId: number;
+    primaryStylePerkId: number;
+    secondaryStyleCategorieId: number;
 }

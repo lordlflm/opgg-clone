@@ -78,6 +78,110 @@ export function region_tag_to_region(tag: string) {
   }
 }
 
+export function perkIdToRuneName(id: number) {
+  switch (id) {
+    case 8005:
+      return "presstheattack";
+    case 8008:
+      return "lethaltempo";
+    case 8021:
+      return "fleetfootwork";
+    case 8010:
+      return "conqueror";
+    case 8112:
+      return "electrocute";
+    case 8124:
+      return "predator";
+    case 8128:
+      return "dark Harvest";
+    case 9923:
+      return "hailofblades";
+    case 8214:
+      return "summonaery";
+    case 8229:
+      return "arcanecomet";
+    case 8230:
+      return "phaserush";
+    case 8437:
+      return "graspoftheundying";
+    case 8439:
+      return "aftershock";
+    case 8465:
+      return "guardian";
+    case 8351:
+      return "glacialaugment";
+    case 8360:
+      return "unsealedspellbook";
+    case 8369:
+      return "firststrike";
+    default:
+      return "ERROR";
+  }
+}
+
+export function secondaryRuneNameToAssetName(name: string) {
+  switch (name) {
+    case "precision":
+      return "7201_precision"
+    case "domination":
+      return "7200_domination"
+    case "sorcery":
+      return "7202_sorcery"
+    case "inspiration":
+      return "7203_whimsy"
+    case "resolve":
+      return "7204_resolve"
+    default:
+      return "ERROR"
+  }
+}
+
+export function styleIdToRuneName(id: number) {
+  switch (id) {
+    case 8000:
+      return "precision";
+    case 8100:
+      return "domination";
+    case 8200:
+      return "sorcery";
+    case 8300:
+      return "inspiration";
+    case 8400:
+      return "resolve";
+    default:
+      return "ERROR";
+  }
+}
+
+export function summonerSpellIdToAssertName(id: number) {
+  switch (id) {
+    case 1:
+      return "summoner_boost";
+    case 3:
+      return "summoner_exhaust";
+    case 4:
+      return "summoner_flash";
+    case 6:
+      return "summoner_haste";
+    case 7:
+      return "summoner_heal";
+    case 11:
+      return "summoner_smite";
+    case 12:
+      return "summoner_teleport_new";
+    case 13:
+      return "summonermana";
+    case 14:
+      return "summonerignite";
+    case 21:
+      return "summonerbarrier";
+    case 32:
+      return "summoner_mark";
+    default:
+      return "ERROR";
+  }
+}
+
 export function itemIdToAssetName(id: number) {
   switch (id) {
     case 0:

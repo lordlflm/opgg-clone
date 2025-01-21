@@ -1,6 +1,12 @@
 <script lang="ts">
     import type { Participant } from "$lib/types/participant";
-    import { itemIdToAssetName } from "$lib/utils/utils";
+    import {
+        itemIdToAssetName,
+        perkIdToRuneName,
+        secondaryRuneNameToAssetName,
+        styleIdToRuneName,
+        summonerSpellIdToAssertName,
+    } from "$lib/utils/utils";
 
     export let team: Array<Participant>;
 </script>
@@ -13,13 +19,34 @@
             alt="Couldn't fetch champion icon"
         />
         <div id="participant-summoner-spells-div">
-            <img src="" alt="Couldn't fetch spell 1 icon" />
-            <img src="" alt="Couldn't fetch spell 2 icon" />
+            <img
+                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
+                    participant.summonerSpell1,
+                )}.png"
+                alt="Couldn't fetch spell 1 icon"
+            />
+            <img
+                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
+                    participant.summonerSpell2,
+                )}.png"
+                alt="Couldn't fetch spell 2 icon"
+            />
         </div>
-        <!--TODO rune icons-->
         <div id="participant-runes-div">
-            <img src="" alt="Couldn't fetch primary rune icon" />
-            <img src="" alt="Couldn't fetch secondary rune icon" />
+            <img
+                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
+                    participant.primaryStyleCategorieId,
+                )}/{perkIdToRuneName(
+                    participant.primaryStylePerkId,
+                )}/{perkIdToRuneName(participant.primaryStylePerkId)}.png"
+                alt="Couldn't fetch primary rune icon"
+            />
+            <img
+                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
+                    styleIdToRuneName(participant.primaryStyleCategorieId),
+                )}.png"
+                alt="Couldn't fetch secondary rune icon"
+            />
         </div>
         <p id="participant-summoner-name-p">{participant.gameName}</p>
         <!--TODO fetch rank?-->

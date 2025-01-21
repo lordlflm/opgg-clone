@@ -2,7 +2,10 @@
     import type { Match } from "$lib/types/match";
     import type { Participant } from "$lib/types/participant";
     import type { Summoner } from "$lib/types/summoner";
-    import { itemIdToAssetName } from "$lib/utils/utils";
+    import {
+        itemIdToAssetName,
+        summonerSpellIdToAssertName,
+    } from "$lib/utils/utils";
 
     import Team from "./team.svelte";
 
@@ -14,6 +17,7 @@
     let summonerKDA: string = getSummonerKDA();
     let summonerItemsPath: Array<string> = getSummonerItemsPath();
     let teams: Array<Array<Participant>> = getTeams();
+    let summonerSpellsId: Array<number> = getSummonerSpellsId();
 
     function getTeams() {
         let teams: Array<Array<Participant>> = [[], []];
@@ -21,7 +25,7 @@
             if ((participant.teamId = 100)) {
                 teams[0].push(participant);
             } else {
-                teams[1].push(participant)
+                teams[1].push(participant);
             }
         }
         return teams;
@@ -70,9 +74,22 @@
                     // TODO default empty icon can be replaced by css also.
                     itemsPath.push(itemIdToAssetName(item));
                 }
+                break;
             }
         }
         return itemsPath;
+    }
+
+    function getSummonerSpellsId(): Array<number> {
+        let spellsId = [];
+        for (let participant of match.participants) {
+            if (participant.puuid == summoner.puuid) {
+                spellsId.push(participant.summonerSpell1);
+                spellsId.push(participant.summonerSpell2);
+                break;
+            }
+        }
+        return spellsId;
     }
 </script>
 
@@ -94,10 +111,19 @@
                 />
             {/each}
         </div>
-        <!--TODO spell icons-->
         <div id="summoner-spells-div">
-            <img src="" alt="Couldn't fetch spell 1 icon" />
-            <img src="" alt="Couldn't fetch spell 2 icon" />
+            <img
+                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
+                    summonerSpellsId[0],
+                )}.png"
+                alt="Couldn't fetch spell 1 icon"
+            />
+            <img
+                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
+                    summonerSpellsId[1],
+                )}.png"
+                alt="Couldn't fetch spell 2 icon"
+            />
         </div>
         <!--TODO rune icons-->
         <div id="runes-div">
@@ -107,7 +133,7 @@
         <p id="kda-p">{summonerKDA}</p>
         <div id="participants-div">
             {#each teams as team}
-                <Team {team}/>
+                <Team {team} />
             {/each}
         </div>
     </div>

@@ -72,6 +72,19 @@
                     for (let participantData of matchData["info"][
                         "participants"
                     ]) {
+                        let primaryStyleCategorieId = 0;
+                        let primaryStylePerkId = 0;
+                        let secondaryStyleCategorieId = 0;
+                        for (let style of participantData["perks"]["styles"]) {
+                            if (style["description"] === "primaryStyle") {
+                                primaryStyleCategorieId = style["style"];
+                                primaryStylePerkId =
+                                    style["selections"][0]["perk"];
+                            } else if (style["description"] === "subStyle") {
+                                secondaryStyleCategorieId = style["style"];
+                            }
+                        }
+
                         const participant: Participant = {
                             gameName: participantData["riotIdGameName"],
                             tagLine: participantData["riotIdTagline"],
@@ -103,6 +116,10 @@
                                 participantData["totalDamageDealtToChampions"],
                             totalDamageTaken:
                                 participantData["totalDamageTaken"],
+                            primaryStyleCategorieId: primaryStyleCategorieId,
+                            primaryStylePerkId: primaryStylePerkId,
+                            secondaryStyleCategorieId:
+                                secondaryStyleCategorieId,
                         };
                         participants.push(participant);
                     }
