@@ -140,11 +140,9 @@ async fn get_top_players(queue: String) -> Result<Vec<HashMap<String, String>>, 
         get_queue_top_player(&queue, "la2".to_string()),
         get_queue_top_player(&queue, "jp1".to_string()),
         get_queue_top_player(&queue, "oc1".to_string()),
-        get_queue_top_player(&queue, "ph2".to_string()),
         get_queue_top_player(&queue, "sg2".to_string()),
         get_queue_top_player(&queue, "tw2".to_string()),
         get_queue_top_player(&queue, "tr1".to_string()),
-        get_queue_top_player(&queue, "th2".to_string()),
         get_queue_top_player(&queue, "me1".to_string()),
     ];
 

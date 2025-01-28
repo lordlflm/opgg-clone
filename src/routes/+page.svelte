@@ -3,7 +3,7 @@
   import TopSummonersDisplay from "$lib/components/top-summoners-display.svelte";
 </script>
 
-<main class="container">
+<main>
   <SummonerSearchForm />
   <TopSummonersDisplay />
 </main>

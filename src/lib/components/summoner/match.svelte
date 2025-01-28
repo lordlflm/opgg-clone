@@ -3,7 +3,11 @@
     import type { Participant } from "$lib/types/participant";
     import type { Summoner } from "$lib/types/summoner";
     import {
+    displayAltIcon,
         itemIdToAssetName,
+        perkIdToRuneName,
+        secondaryRuneNameToAssetName,
+        styleIdToRuneName,
         summonerSpellIdToAssertName,
     } from "$lib/utils/utils";
 
@@ -12,12 +16,31 @@
     export let match: Match;
     export let summoner: Summoner;
 
-    let summonerChampionId: string = getSummonerChampionId();
-    let matchDuration: string = formatMatchDuration();
+    let summonerParticipantObject: Participant =
+        getSummonerParticipantObject()!;
     let summonerKDA: string = getSummonerKDA();
-    let summonerItemsPath: Array<string> = getSummonerItemsPath();
     let teams: Array<Array<Participant>> = getTeams();
-    let summonerSpellsId: Array<number> = getSummonerSpellsId();
+
+    // icons paths
+    let summonerSpellsIconPaths: Array<string> = [];
+    summonerSpellsIconPaths.push(
+        `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/${summonerSpellIdToAssertName(summonerParticipantObject.summonerSpell1)}.png`,
+    );
+    summonerSpellsIconPaths.push(
+        `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/${summonerSpellIdToAssertName(summonerParticipantObject.summonerSpell2)}.png`,
+    );
+    let summonerChampionIconPath: string = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${summonerParticipantObject.championId}.png`;
+    let summonerItemPaths: Array<string> = [];
+    for (let item of summonerParticipantObject.items) {
+        // TODO I guess some icons arent available in community dragon
+        // yet. The icon is determined by a huge switch case in utility.ts.
+        // If thoses icons are added we need to add them manually. Find an alternative.
+
+        // TODO default empty icon can be replaced by css also.
+        summonerItemPaths.push(
+            `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/${itemIdToAssetName(item)}.png`,
+        );
+    }
 
     function getTeams() {
         let teams: Array<Array<Participant>> = [[], []];
@@ -41,55 +64,18 @@
             : `${minutes}m ${seconds}s`;
     }
 
-    function getSummonerChampionId(): string {
+    function getSummonerParticipantObject() {
         for (let participant of match.participants) {
             if (participant.puuid == summoner.puuid) {
-                return participant.championId.toString();
+                return participant;
             }
         }
-        return "";
     }
 
-    function getSummonerKDA(): string {
-        for (let participant of match.participants) {
-            if (participant.puuid == summoner.puuid) {
-                return participant.deaths == 0
-                    ? `${participant.kills}/${participant.deaths}/${participant.assists} (${participant.kills + participant.assists}:1 KDA)`
-                    : `${participant.kills}/${participant.deaths}/${participant.assists} (${((participant.kills + participant.assists) / participant.deaths).toFixed(2)}:1 KDA)`;
-            }
-        }
-        return "";
-    }
-
-    function getSummonerItemsPath(): Array<string> {
-        let itemsPath: Array<string> = [];
-
-        for (let participant of match.participants) {
-            if (participant.puuid == summoner.puuid) {
-                for (let item of participant.items) {
-                    // TODO I guess some icons arent available in community dragon
-                    // yet. The icon is determined by a huge switch case in utility.ts.
-                    // If thoses icons are added we need to add them manually. Find an alternative.
-
-                    // TODO default empty icon can be replaced by css also.
-                    itemsPath.push(itemIdToAssetName(item));
-                }
-                break;
-            }
-        }
-        return itemsPath;
-    }
-
-    function getSummonerSpellsId(): Array<number> {
-        let spellsId = [];
-        for (let participant of match.participants) {
-            if (participant.puuid == summoner.puuid) {
-                spellsId.push(participant.summonerSpell1);
-                spellsId.push(participant.summonerSpell2);
-                break;
-            }
-        }
-        return spellsId;
+    function getSummonerKDA() {
+        return summonerParticipantObject.deaths == 0
+            ? `${summonerParticipantObject.kills}/${summonerParticipantObject.deaths}/${summonerParticipantObject.assists} (${summonerParticipantObject.kills + summonerParticipantObject.assists}:1 KDA)`
+            : `${summonerParticipantObject.kills}/${summonerParticipantObject.deaths}/${summonerParticipantObject.assists} (${((summonerParticipantObject.kills + summonerParticipantObject.assists) / summonerParticipantObject.deaths).toFixed(2)}:1 KDA)`;
     }
 </script>
 
@@ -99,36 +85,59 @@
         <p id="queue-type-p"></p>
         <img
             id="summoner-champion-icon"
-            src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/{summonerChampionId}.png"
+            src={summonerChampionIconPath}
             alt="Couldn't fetch champion icon"
+            on:error={(event) => displayAltIcon(event)}
         />
-        <p id="game-duration-p">{matchDuration}</p>
+        <p id="game-duration-p">{formatMatchDuration()}</p>
         <div id="items-div">
-            {#each summonerItemsPath as item}
+            {#each summonerItemPaths as item, index}
                 <img
-                    src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/{item}.png"
+                    id="summoner-item-icon"
+                    src={item}
                     alt="Couldn't fetch icon of item with id {item}"
+                    on:error={(event) => displayAltIcon(event)}
                 />
             {/each}
         </div>
         <div id="summoner-spells-div">
             <img
-                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
-                    summonerSpellsId[0],
-                )}.png"
+                id="spell-1-icon"
+                src={summonerSpellsIconPaths[0]}
                 alt="Couldn't fetch spell 1 icon"
+                on:error={(event) => displayAltIcon(event)}
             />
             <img
-                src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
-                    summonerSpellsId[1],
-                )}.png"
+                id="spell-2-icon"
+                src={summonerSpellsIconPaths[1]}
                 alt="Couldn't fetch spell 2 icon"
+                on:error={(event) => displayAltIcon(event)}
             />
         </div>
         <!--TODO rune icons-->
         <div id="runes-div">
-            <img src="" alt="Couldn't fetch primary rune icon" />
-            <img src="" alt="Couldn't fetch secondary rune icon" />
+            <img
+            id="primary-rune-icon"
+                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
+                    summonerParticipantObject.primaryStyleCategorieId,
+                )}/{perkIdToRuneName(
+                    summonerParticipantObject.primaryStylePerkId,
+                )}/{perkIdToRuneName(
+                    summonerParticipantObject.primaryStylePerkId,
+                )}.png"
+                alt="Couldn't fetch primary rune icon"
+                on:error={(event) => displayAltIcon(event)}
+            />
+            <img
+            id="secondary-rune-icon"
+                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
+                    styleIdToRuneName(
+                        summonerParticipantObject.primaryStyleCategorieId,
+                    ),
+                )}.png"
+                alt="Couldn't fetch secondary rune icon"
+                on:error={(event) => displayAltIcon(event)}
+            />
         </div>
         <p id="kda-p">{summonerKDA}</p>
         <div id="participants-div">

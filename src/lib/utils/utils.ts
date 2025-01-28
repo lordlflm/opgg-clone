@@ -35,6 +35,12 @@ export const validRegions = [
   { value: "thailand", label: "Thailand" },
 ];
 
+export function displayAltIcon(event: Event) {
+  const defaultFallbackIconPath = "icons/fallback/default_fallback.png"
+  const target = event.target as HTMLImageElement;
+  target.src = defaultFallbackIconPath;
+}
+
 export function region_tag_to_region(tag: string) {
   switch (tag) {
     case "na1":

@@ -77,35 +77,62 @@
   }
 </script>
 
-<main class="container">
-  <div id="top-players-container-div">
-    <h2 id="top-summoners-h2">Top summoners</h2>
+<main>
+  <div
+    id="top-players-container-div"
+    class="flex flex-col items-center justify-center w-full mx-auto"
+  >
+    <h2
+      id="top-summoners-h2"
+      class="text-gray-900 dark:text-white font-bold text-center text-2xl"
+    >
+      Top Summoners
+    </h2>
     <select
       id="rank-type-select"
       bind:this={rankTypeSelect}
       on:change={onRankTypeSelectChange}
+      class="dark:bg-gray-800 dark:text-white p-1 rounded-lg m-3 hover:dark:bg-gray-700"
     >
       <option value={RANKED_SOLO_LEAGUE}>Ranked Solo/Duo</option>
       <option value={RANKED_FLEX_LEAGUE}>Ranked Flex</option>
     </select>
-    <div id="top-summoners-cards-div">
-      {#if topSummonersFetched}
+    {#if topSummonersFetched}
+      <div
+        id="top-summoners-cards-div"
+        class="flex flex-wrap justify-center w-full"
+      >
         {#each topSummonersArray! as summoner}
-          <div id="summoner-card-div">
+          <div
+            id="summoner-card-div"
+            class="dark:bg-gray-800 m-2 rounded-xl w-5/12 text-center shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1 border-2 border-blue-500 hover:dark:bg-gray-700 bg-white"
+          >
             <a
               href="summoner?gameName={summoner.gameName}&tagLine={summoner.tagLine}&region={summoner.server}&puuid={summoner.puuid}"
             >
-              <h3 id="region-h3">Top player of {summoner.server} server</h3>
+              <h3
+                id="region-h3"
+                class="text-gray-900 dark:text-white text-xl p-2"
+              >
+                Top summoner of {summoner.server} server
+              </h3>
               <img
+                id="summmoner-icon"
                 src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{summoner.iconId}.jpg"
                 alt="Icon not found"
+                class="rounded-full w-1/4 mx-auto p-2"
               />
-              <p id="summoner-name">{summoner.gameName}</p>
+              <p
+                id="summoner-name"
+                class="text-gray-900 dark:text-white text-xl p-2"
+              >
+                {summoner.gameName}
+              </p>
               {#if rankTypeSelect.value == RANKED_SOLO_LEAGUE}
-                <p id="league-points-p">
+                <p id="league-points-p p-2">
                   Challenger {summoner.soloLeague?.leaguePoints} LP
                 </p>
-                <p id="winrate-p">
+                <p id="winrate-p" class="p-2">
                   {summoner.soloLeague?.wins} wins / {summoner.soloLeague
                     ?.losses} losses ({Math.round(
                     (Number(summoner.soloLeague?.wins!) /
@@ -131,13 +158,19 @@
             </a>
           </div>
         {/each}
-      {:else}
+      </div>
+    {:else}
+      <div
+        class="dark:bg-gray-700 rounded-xl text-center w-60 h-60 mx-auto p-4 flex flex-col shadow-xl border-2 border-blue-500"
+      >
         <p id="fetching-msg">Fetching top players... (probably not you)</p>
-        <!-- TODO add loading circle with css? -->
-        <!-- TODO add some timeout mechanism where an error is displayed -->
-      {/if}
-    </div>
+        <div
+          class="border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full w-25 h-25 animate-spin mx-auto mt-8"
+        ></div>
+      </div>
+    {/if}
   </div>
 </main>
 
-<style></style>
+<style>
+</style>

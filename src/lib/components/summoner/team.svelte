@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { Participant } from "$lib/types/participant";
     import {
+        displayAltIcon,
         itemIdToAssetName,
         perkIdToRuneName,
         secondaryRuneNameToAssetName,
@@ -17,6 +18,7 @@
             id="participant-champion-icon"
             src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/{participant.championId}.png"
             alt="Couldn't fetch champion icon"
+            on:error={(event) => displayAltIcon(event)}
         />
         <div id="participant-summoner-spells-div">
             <img
@@ -24,28 +26,34 @@
                     participant.summonerSpell1,
                 )}.png"
                 alt="Couldn't fetch spell 1 icon"
+                on:error={(event) => displayAltIcon(event)}
             />
             <img
                 src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
                     participant.summonerSpell2,
                 )}.png"
                 alt="Couldn't fetch spell 2 icon"
+                on:error={(event) => displayAltIcon(event)}
             />
         </div>
         <div id="participant-runes-div">
             <img
+                id="primary-rune-icon"
                 src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
                     participant.primaryStyleCategorieId,
                 )}/{perkIdToRuneName(
                     participant.primaryStylePerkId,
                 )}/{perkIdToRuneName(participant.primaryStylePerkId)}.png"
                 alt="Couldn't fetch primary rune icon"
+                on:error={(event) => displayAltIcon(event)}
             />
             <img
+                id="secondary-rune-icon"
                 src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
                     styleIdToRuneName(participant.primaryStyleCategorieId),
                 )}.png"
                 alt="Couldn't fetch secondary rune icon"
+                on:error={(event) => displayAltIcon(event)}
             />
         </div>
         <p id="participant-summoner-name-p">{participant.gameName}</p>
@@ -67,6 +75,7 @@
         <p id="participant-damage-taken-p">{participant.totalDamageTaken}</p>
         <p id="participant-cs-p">{participant.minionKilled}</p>
         {#each participant.items as item}
+            <!-- TODO alt image -->
             <img
                 src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/{itemIdToAssetName(
                     item,
@@ -74,6 +83,7 @@
                 alt="Couldn't fetch icon of item with id {itemIdToAssetName(
                     item,
                 )}"
+                on:error={(event) => displayAltIcon(event)}
             />
         {/each}
     {/each}
