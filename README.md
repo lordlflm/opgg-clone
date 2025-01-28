@@ -20,11 +20,11 @@
 - get and display queue type in match.svelte
 - maybe not display weird queue type matches with temporary items (buggy icons maybe?)
 - cs per minute in team.svelte 2
-- link to summoner page for each particpant in team.svelte 3
+- link to summoner page for each particpant in team.svelte
 
 ## Upgrades
 ### Easy
-- instead of getter function in match.svelte just fetch the summoner participant object once and access it
+- instead of getter function in match.svelte just fetch the summoner participant object once and access it DONE
 - componentize differently top players in home page and participants in team component in summoner page 
 
 ### Harder

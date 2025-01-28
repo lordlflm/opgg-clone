@@ -71,33 +71,56 @@
 </script>
 
 <main>
-  <div id="form-container-div">
+  <div
+    id="form-container-div"
+    class="flex flex-col justify-center items-center mt-5 mb-6 text-center"
+  >
+    <h2
+      id="find-summoner-h2"
+      class="text-gray-900 dark:text-white font-bold text-center text-2xl"
+    >
+      Find a Summoner
+    </h2>
     <h2>Enter in-game name and region</h2>
-    <form id="summoner-form" on:submit={onSummonerSubmit}>
-      <div id="summoner-input-div">
+    <form id="summoner-form" class="w-full" on:submit={onSummonerSubmit}>
+      <div id="summoner-input-div" class="flex flex-col justify-center items-center">
         <label for="summoner-name" hidden>Summoner name</label>
         <input
           name="summoner-name"
           id="summoner-name"
           type="text"
           placeholder="IGN#TAG"
+          class="p-1 rounded-lg dark:bg-gray-800 dark:text-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 mt-1 mb-1 text-center w-[40%]"
         />
 
         <label for="summoner-region" hidden>Summoner region</label>
-        <select name="summoner-region" id="summoner-region">
+        <select
+          name="summoner-region"
+          id="summoner-region"
+          class="dark:bg-gray-800 dark:text-white p-1 rounded-lg m-3 hover:dark:bg-gray-700"
+        >
           {#each validRegions as region}
             <option value={region.value}>{region.label}</option>
           {/each}
         </select>
       </div>
-      <div id="summoner-invalid-div" bind:this={summonerInvalidDiv}>
+      <div
+        id="summoner-invalid-div"
+        class="text-red-600"
+        bind:this={summonerInvalidDiv}
+      >
         <p id="summoner-invalid" bind:this={summonerInvalid}></p>
         <p id="summoner-name-invalid" bind:this={summonerNameInvalid}></p>
         <p id="summoner-tag-invalid" bind:this={summonerTagInvalid}></p>
         <p id="summoner-region-invalid" bind:this={summonerRegionInvalid}></p>
       </div>
 
-      <input type="submit" value="Find Summoner" id="submit" />
+      <input
+        type="submit"
+        value="Find Summoner"
+        id="submit"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300"
+      />
     </form>
   </div>
 </main>

@@ -77,7 +77,7 @@
   }
 </script>
 
-<main>
+<main class="mb-20">
   <div
     id="top-players-container-div"
     class="flex flex-col items-center justify-center w-full mx-auto"
@@ -92,7 +92,7 @@
       id="rank-type-select"
       bind:this={rankTypeSelect}
       on:change={onRankTypeSelectChange}
-      class="dark:bg-gray-800 dark:text-white p-1 rounded-lg m-3 hover:dark:bg-gray-700"
+      class="dark:bg-gray-800 dark:text-white p-1 rounded-lg m-3 hover:dark:bg-gray-700 mb-7"
     >
       <option value={RANKED_SOLO_LEAGUE}>Ranked Solo/Duo</option>
       <option value={RANKED_FLEX_LEAGUE}>Ranked Flex</option>
