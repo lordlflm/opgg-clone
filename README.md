@@ -6,13 +6,10 @@
 4. `npm run tauri dev`
 
 ## TODOs
-- different KDA text color if >2 >3 >4 etc.
-- double kill pastille
 - too many icons arent found
 - make match fetching async in main.rs
-- champion name on icon hover
+- participants rank
 - champion level in team.svelte
-- link to summoner page for each particpant in team.svelte BUG
 
 ## Ideas
 - display top recently played champion for a summoner

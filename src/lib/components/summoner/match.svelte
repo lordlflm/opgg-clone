@@ -90,9 +90,13 @@
         <div class="flex pb-3 max-w-250">
             <div class="flex flex-col text-center">
                 <p id="queue-type-p">{match.queueType}</p>
-                <p id="is-victory" class="pt-10 {summonerParticipantObject.teamId == match.winningTeam
-                        ? "text-blue-500"
-                        : "text-red-500"}">
+                <p
+                    id="is-victory"
+                    class="pt-10 {summonerParticipantObject.teamId ==
+                    match.winningTeam
+                        ? 'text-blue-500'
+                        : 'text-red-500'}"
+                >
                     {summonerParticipantObject.teamId == match.winningTeam
                         ? "Victory"
                         : "Defeat"}
@@ -157,8 +161,19 @@
                     />
                 </div>
             </div>
-            <div class="flex justify-center text-center items-center w-[25%]">
+            <div
+                class="flex flex-col justify-center text-center items-center w-[25%]"
+            >
                 <p id="kda-p">{summonerKDA}</p>
+                {#if summonerParticipantObject.pentaKills != 0}
+                    <p class="bg-red-500 rounded-xl px-3 mt-2">Penta Kill</p>
+                {:else if summonerParticipantObject.quadraKills != 0}
+                    <p class="bg-red-500 rounded-xl px-3 mt-2">Quadra Kill</p>
+                {:else if summonerParticipantObject.tripleKills != 0}
+                    <p class="bg-red-500 rounded-xl px-3 mt-2">Triple Kill</p>
+                {:else if summonerParticipantObject.doubleKills != 0}
+                    <p class="bg-red-500 rounded-xl px-3 mt-2">Double Kill</p>
+                {/if}
             </div>
             <div
                 id="items-div"

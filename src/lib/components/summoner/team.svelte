@@ -19,10 +19,16 @@
     <div
         class="grid grid-cols-[2fr_1fr_1fr_2fr_3fr_2fr_2fr_2fr_7fr] max-w-250 bg-gray-700 text-gray-400"
     >
-    <div class="text-center">
-        <p>{team[0].teamId == 100 ? 'Red team' : 'Blue team'}</p>
-        <p class={team[0].teamId == winningTeam ? 'text-blue-500' : 'text-red-500'}>{team[0].teamId == winningTeam ? 'Victory' : 'Defeat'}</p>
-    </div>
+        <div class="text-center">
+            <p>{team[0].teamId == 100 ? "Red team" : "Blue team"}</p>
+            <p
+                class={team[0].teamId == winningTeam
+                    ? "text-blue-500"
+                    : "text-red-500"}
+            >
+                {team[0].teamId == winningTeam ? "Victory" : "Defeat"}
+            </p>
+        </div>
         <p></p>
         <p></p>
         <p></p>
@@ -38,6 +44,7 @@
             class="{participant.teamId == winningTeam
                 ? 'bg-blue-400 hover:bg-blue-300'
                 : 'bg-red-400 hover:bg-red-300'} grid grid-cols-[2fr_1fr_1fr_2fr_3fr_2fr_2fr_2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-1 p-1 items-center max-w-250"
+            rel="external"
             href="summoner?gameName={participant.gameName}&tagLine={participant.tagLine}&region={server}&puuid={participant.puuid}"
         >
             <div class="w-7/9">
@@ -49,7 +56,10 @@
                     class="rounded-full ml-2"
                 />
             </div>
-            <div id="participant-summoner-spells-div" class="flex flex-col w-7/9">
+            <div
+                id="participant-summoner-spells-div"
+                class="flex flex-col w-7/9"
+            >
                 <div>
                     <img
                         src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/data/spells/icons2d/{summonerSpellIdToAssertName(
@@ -70,7 +80,10 @@
                     />
                 </div>
             </div>
-            <div id="participant-runes-div" class="flex flex-col justify-center items-center w-7/9">
+            <div
+                id="participant-runes-div"
+                class="flex flex-col justify-center items-center w-7/9"
+            >
                 <div>
                     <img
                         id="primary-rune-icon"
