@@ -50,7 +50,6 @@
     if (invalidFlag == 0) {
       try {
         const response: any = await invoke("get_account_by_gamename", { data });
-        console.log(response);
         if (response.success === "true") {
           summonerInvalid!.textContent = "";
           const queryParams = new URLSearchParams();

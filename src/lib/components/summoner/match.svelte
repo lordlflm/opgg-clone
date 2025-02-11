@@ -3,7 +3,7 @@
     import type { Participant } from "$lib/types/participant";
     import type { Summoner } from "$lib/types/summoner";
     import {
-    displayAltIcon,
+        displayAltIcon,
         itemIdToAssetName,
         perkIdToRuneName,
         secondaryRuneNameToAssetName,
@@ -45,12 +45,13 @@
     function getTeams() {
         let teams: Array<Array<Participant>> = [[], []];
         for (let participant of match.participants) {
-            if ((participant.teamId = 100)) {
+            if (participant.teamId == 100) {
                 teams[0].push(participant);
             } else {
                 teams[1].push(participant);
             }
         }
+
         return teams;
     }
 
@@ -117,7 +118,7 @@
         <!--TODO rune icons-->
         <div id="runes-div">
             <img
-            id="primary-rune-icon"
+                id="primary-rune-icon"
                 src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
                     summonerParticipantObject.primaryStyleCategorieId,
                 )}/{perkIdToRuneName(
@@ -129,7 +130,7 @@
                 on:error={(event) => displayAltIcon(event)}
             />
             <img
-            id="secondary-rune-icon"
+                id="secondary-rune-icon"
                 src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
                     styleIdToRuneName(
                         summonerParticipantObject.primaryStyleCategorieId,
@@ -142,7 +143,12 @@
         <p id="kda-p">{summonerKDA}</p>
         <div id="participants-div">
             {#each teams as team}
-                <Team {team} />
+                <Team
+                    {team}
+                    server={summoner.server}
+                    gameDuration={match.duration}
+                    winningTeam={match.winningTeam}
+                />
             {/each}
         </div>
     </div>

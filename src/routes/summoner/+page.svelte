@@ -5,6 +5,7 @@
 
     import type { Summoner } from "$lib/types/summoner";
     import {
+        displayAltIcon,
         RANKED_FLEX_LEAGUE,
         RANKED_SOLO_LEAGUE,
         tierValues,
@@ -14,6 +15,7 @@
     import type { Participant } from "$lib/types/participant";
 
     import MatchComponent from "$lib/components/summoner/match.svelte";
+    import Team from "$lib/components/summoner/team.svelte";
 
     let rankTypeSelect: HTMLSelectElement;
     let selectedRankType: string = RANKED_SOLO_LEAGUE;
@@ -64,8 +66,6 @@
                 region: queryParams.get("region")!,
             });
 
-            console.log(matchesData);
-
             if (matchesData.length > 0) {
                 for (let matchData of matchesData) {
                     let participants: Array<Participant> = [];
@@ -85,7 +85,7 @@
                             }
                         }
 
-                        const participant: Participant = {
+                        const participant = {
                             gameName: participantData["riotIdGameName"],
                             tagLine: participantData["riotIdTagline"],
                             puuid: participantData["puuid"],
@@ -121,6 +121,7 @@
                             secondaryStyleCategorieId:
                                 secondaryStyleCategorieId,
                         };
+
                         participants.push(participant);
                     }
 
@@ -140,7 +141,6 @@
                     };
                     matches.push(match);
                 }
-                console.log(matches);
             } else {
                 console.error(
                     "Error while fetching endpoint `/lol/match/v5/matches/by-puuid/{puuid}/ids`",
@@ -243,6 +243,7 @@
                         id="rank-icon"
                         src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-{summonerHighestTier.toLowerCase()}.png"
                         alt="rank icon not found"
+                        on:error={(event) => displayAltIcon(event)}
                     />
                 {/if}
                 <!-- TODO replace alt with fallback profile icon -->
@@ -250,6 +251,8 @@
                     id="icon"
                     src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{summoner.iconId}.jpg"
                     alt="summoner icon not found"
+                    class="rounded-full"
+                    on:error={(event) => displayAltIcon(event)}
                 />
             </div>
             <div id="ign-tag-div">
@@ -317,10 +320,23 @@
             </div>
         </div>
 
-        <div id="matches">
+        <div id="matches" class="flex flex-col">
             {#each matches as match}
+            <div class="mx-auto">
                 <MatchComponent {match} {summoner} />
+            </div>
             {/each}
+        </div>
+    {:else}
+        <div class="flex items-center h-screen">
+            <div class="flex flex-col text-center mx-auto">
+                <div
+                    class="border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full w-25 h-25 animate-spin mx-auto mb-8"
+                ></div>
+                <p id="fetching-msg">
+                    Fetching your data... (All your gray screens)
+                </p>
+            </div>
         </div>
     {/if}
 </main>
