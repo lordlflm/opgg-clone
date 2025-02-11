@@ -35,6 +35,28 @@ export const validRegions = [
   { value: "thailand", label: "Thailand" },
 ];
 
+export function queueIdToType(id: number) {
+  let queueType = "Unknown";
+  switch (id) {
+    case 420:
+      queueType = "Ranked Solo/Duo"
+      break;
+    case 440:
+      queueType = "Ranked Flex"
+      break;
+    case 400:
+      queueType = "Normal Draft"
+      break;
+    case 700:
+      queueType = "Clash"
+      break;
+    case 900:
+      queueType = "URF"
+      break;
+  }
+  return queueType;
+}
+
 export function displayAltIcon(event: Event) {
   const defaultFallbackIconPath = "icons/fallback/default_fallback.png"
   const target = event.target as HTMLImageElement;

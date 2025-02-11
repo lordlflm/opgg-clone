@@ -81,66 +81,101 @@
 </script>
 
 <main>
-    <div id="match-div">
-        <!--TODO queue type-->
-        <p id="queue-type-p"></p>
-        <img
-            id="summoner-champion-icon"
-            src={summonerChampionIconPath}
-            alt="Couldn't fetch champion icon"
-            on:error={(event) => displayAltIcon(event)}
-        />
-        <p id="game-duration-p">{formatMatchDuration()}</p>
-        <div id="items-div">
-            {#each summonerItemPaths as item, index}
+    <div
+        id="match-div"
+        class="border-3 {summonerParticipantObject.teamId == match.winningTeam
+            ? 'border-blue-500'
+            : 'border-red-500'} mb-10 p-3 bg-gray-800 text-white font-bold"
+    >
+        <div class="flex pb-3 max-w-250">
+            <div class="flex flex-col text-center">
+                <p id="queue-type-p">{match.queueType}</p>
+                <p id="is-victory" class="pt-10 {summonerParticipantObject.teamId == match.winningTeam
+                        ? "text-blue-500"
+                        : "text-red-500"}">
+                    {summonerParticipantObject.teamId == match.winningTeam
+                        ? "Victory"
+                        : "Defeat"}
+                </p>
+                <p id="game-duration-p">{formatMatchDuration()}</p>
+            </div>
+            <div class="px-5 flex items-center">
                 <img
-                    id="summoner-item-icon"
-                    src={item}
-                    alt="Couldn't fetch icon of item with id {item}"
+                    id="summoner-champion-icon"
+                    src={summonerChampionIconPath}
+                    alt="Couldn't fetch champion icon"
                     on:error={(event) => displayAltIcon(event)}
+                    class="rounded-full"
                 />
-            {/each}
+            </div>
+            <div id="summoner-spells-div" class="flex flex-col justify-center">
+                <div class="w-[75%] pb-2">
+                    <img
+                        id="spell-1-icon"
+                        src={summonerSpellsIconPaths[0]}
+                        alt="Couldn't fetch spell 1 icon"
+                        on:error={(event) => displayAltIcon(event)}
+                    />
+                </div>
+                <div class="w-[75%]">
+                    <img
+                        id="spell-2-icon"
+                        src={summonerSpellsIconPaths[1]}
+                        alt="Couldn't fetch spell 2 icon"
+                        on:error={(event) => displayAltIcon(event)}
+                    />
+                </div>
+            </div>
+            <div
+                id="runes-div"
+                class="flex flex-col justify-center items-center"
+            >
+                <div class="w-10">
+                    <img
+                        id="primary-rune-icon"
+                        src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
+                            summonerParticipantObject.primaryStyleCategorieId,
+                        )}/{perkIdToRuneName(
+                            summonerParticipantObject.primaryStylePerkId,
+                        )}/{perkIdToRuneName(
+                            summonerParticipantObject.primaryStylePerkId,
+                        )}.png"
+                        alt="Couldn't fetch primary rune icon"
+                        on:error={(event) => displayAltIcon(event)}
+                    />
+                </div>
+                <div class="w-7">
+                    <img
+                        id="secondary-rune-icon"
+                        src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
+                            styleIdToRuneName(
+                                summonerParticipantObject.primaryStyleCategorieId,
+                            ),
+                        )}.png"
+                        alt="Couldn't fetch secondary rune icon"
+                        on:error={(event) => displayAltIcon(event)}
+                    />
+                </div>
+            </div>
+            <div class="flex justify-center text-center items-center w-[25%]">
+                <p id="kda-p">{summonerKDA}</p>
+            </div>
+            <div
+                id="items-div"
+                class="flex justify-center items-center mx-auto"
+            >
+                {#each summonerItemPaths as item}
+                    <div class="p-1 w-[15%]">
+                        <img
+                            id="summoner-item-icon"
+                            src={item}
+                            alt="Couldn't fetch icon of item with id {item}"
+                            on:error={(event) => displayAltIcon(event)}
+                        />
+                    </div>
+                {/each}
+            </div>
         </div>
-        <div id="summoner-spells-div">
-            <img
-                id="spell-1-icon"
-                src={summonerSpellsIconPaths[0]}
-                alt="Couldn't fetch spell 1 icon"
-                on:error={(event) => displayAltIcon(event)}
-            />
-            <img
-                id="spell-2-icon"
-                src={summonerSpellsIconPaths[1]}
-                alt="Couldn't fetch spell 2 icon"
-                on:error={(event) => displayAltIcon(event)}
-            />
-        </div>
-        <!--TODO rune icons-->
-        <div id="runes-div">
-            <img
-                id="primary-rune-icon"
-                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{styleIdToRuneName(
-                    summonerParticipantObject.primaryStyleCategorieId,
-                )}/{perkIdToRuneName(
-                    summonerParticipantObject.primaryStylePerkId,
-                )}/{perkIdToRuneName(
-                    summonerParticipantObject.primaryStylePerkId,
-                )}.png"
-                alt="Couldn't fetch primary rune icon"
-                on:error={(event) => displayAltIcon(event)}
-            />
-            <img
-                id="secondary-rune-icon"
-                src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
-                    styleIdToRuneName(
-                        summonerParticipantObject.primaryStyleCategorieId,
-                    ),
-                )}.png"
-                alt="Couldn't fetch secondary rune icon"
-                on:error={(event) => displayAltIcon(event)}
-            />
-        </div>
-        <p id="kda-p">{summonerKDA}</p>
         <div id="participants-div">
             {#each teams as team}
                 <Team

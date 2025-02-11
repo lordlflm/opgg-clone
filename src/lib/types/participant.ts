@@ -20,4 +20,8 @@ export interface Participant {
     primaryStyleCategorieId: number;
     primaryStylePerkId: number;
     secondaryStyleCategorieId: number;
+    doubleKills: number;
+    tripleKills: number;
+    quadraKills: number;
+    pentaKills: number;
 }

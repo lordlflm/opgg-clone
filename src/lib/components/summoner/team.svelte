@@ -19,7 +19,10 @@
     <div
         class="grid grid-cols-[2fr_1fr_1fr_2fr_3fr_2fr_2fr_2fr_7fr] max-w-250 bg-gray-700 text-gray-400"
     >
-        <p></p>
+    <div class="text-center">
+        <p>{team[0].teamId == 100 ? 'Red team' : 'Blue team'}</p>
+        <p class={team[0].teamId == winningTeam ? 'text-blue-500' : 'text-red-500'}>{team[0].teamId == winningTeam ? 'Victory' : 'Defeat'}</p>
+    </div>
         <p></p>
         <p></p>
         <p></p>

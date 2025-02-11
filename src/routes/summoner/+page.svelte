@@ -6,6 +6,7 @@
     import type { Summoner } from "$lib/types/summoner";
     import {
         displayAltIcon,
+        queueIdToType,
         RANKED_FLEX_LEAGUE,
         RANKED_SOLO_LEAGUE,
         tierValues,
@@ -120,6 +121,10 @@
                             primaryStylePerkId: primaryStylePerkId,
                             secondaryStyleCategorieId:
                                 secondaryStyleCategorieId,
+                            doubleKills: participantData["doubleKills"],
+                            tripleKills: participantData["tripleKills"],
+                            quadraKills: participantData["quadraKills"],
+                            pentaKills: participantData["pentaKills"],
                         };
 
                         participants.push(participant);
@@ -134,7 +139,7 @@
                     }
 
                     const match: Match = {
-                        queueType: matchData["info"]["gameType"],
+                        queueType: queueIdToType(matchData["info"]["queueId"]),
                         duration: matchData["info"]["gameDuration"],
                         participants: participants,
                         winningTeam: winningTeam!,
@@ -322,9 +327,9 @@
 
         <div id="matches" class="flex flex-col">
             {#each matches as match}
-            <div class="mx-auto">
-                <MatchComponent {match} {summoner} />
-            </div>
+                <div class="mx-auto">
+                    <MatchComponent {match} {summoner} />
+                </div>
             {/each}
         </div>
     {:else}
