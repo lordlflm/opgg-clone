@@ -13,15 +13,6 @@ lazy_static! {
     };
 }
 
-/// Fetches endpoint `/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}`
-/// of `ACCOUNT-V1` API
-///
-/// Takes summoner name and tag as String arguments and returns
-/// a HashMap with the following gameName, tagLine and puuid on success,
-/// and TODO WHAT? on failure. Used specifically to get the puuid for a summoner.
-///
-/// * `summoner_name` - Name of the summoner to fetch
-/// * `summoner_tag` - tag line of the suummoner
 pub async fn get_account_from_gamename(
     summoner_name: &String,
     summoner_tag: &String,

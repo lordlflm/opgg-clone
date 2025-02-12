@@ -16,7 +16,6 @@
     const data = Object.fromEntries(formData);
     let invalidFlag = 0;
 
-    // TODO make sure name is of valid length
     if (data["summoner-name"] == "") {
       summonerNameInvalid!.textContent = "invalid summoner name";
       invalidFlag++;
@@ -24,7 +23,6 @@
       summonerNameInvalid!.textContent = "";
     }
 
-    //TODO make sure tagline is of valid length
     if (!data["summoner-name"].toString().includes("#")) {
       summonerTagInvalid!.textContent = "invalid #tagline";
       invalidFlag++;
@@ -44,9 +42,6 @@
       summonerRegionInvalid!.textContent = "";
     }
 
-    //TODO sanitize data for XSS/SQLi
-    //TODO trim spaces
-
     if (invalidFlag == 0) {
       try {
         const response: any = await invoke("get_account_by_gamename", { data });
@@ -57,7 +52,6 @@
           queryParams.append("tagLine", response.tagLine);
           queryParams.append("region", response.region);
           queryParams.append("puuid", response.puuid);
-          // TODO: proper svelte routing
           goto(`summoner?${queryParams.toString()}`);
         } else {
           summonerInvalid!.textContent = "This summoner does not exist";

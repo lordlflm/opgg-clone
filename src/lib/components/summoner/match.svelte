@@ -32,11 +32,6 @@
     let summonerChampionIconPath: string = `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/${summonerParticipantObject.championId}.png`;
     let summonerItemPaths: Array<string> = [];
     for (let item of summonerParticipantObject.items) {
-        // TODO I guess some icons arent available in community dragon
-        // yet. The icon is determined by a huge switch case in utility.ts.
-        // If thoses icons are added we need to add them manually. Find an alternative.
-
-        // TODO default empty icon can be replaced by css also.
         summonerItemPaths.push(
             `https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/items/icons2d/${itemIdToAssetName(item)}.png`,
         );
@@ -153,7 +148,7 @@
                         id="secondary-rune-icon"
                         src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
                             styleIdToRuneName(
-                                summonerParticipantObject.primaryStyleCategorieId,
+                                summonerParticipantObject.secondaryStyleCategorieId,
                             ),
                         )}.png"
                         alt="Couldn't fetch secondary rune icon"

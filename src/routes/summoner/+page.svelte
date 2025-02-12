@@ -61,7 +61,6 @@
             }
 
             // call to `/lol/match/v5/matches/by-puuid/{puuid}/ids` endpoint
-            // TODO later
             const matchesData: any = await invoke("get_matches", {
                 puuid: queryParams.get("puuid")!,
                 region: queryParams.get("region")!,
@@ -179,7 +178,6 @@
             }
             summonerFetched = true;
         } catch (error) {
-            // TODO might want to redirect to home page?
             console.error("Error:", error);
         }
         console.debug(summoner);
@@ -241,17 +239,10 @@
 
 <main>
     {#if summonerFetched}
-        <div id="profile-div">
-            <div id="icon-div">
-                {#if summonerHighestTier !== null}
-                    <img
-                        id="rank-icon"
-                        src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-{summonerHighestTier.toLowerCase()}.png"
-                        alt="rank icon not found"
-                        on:error={(event) => displayAltIcon(event)}
-                    />
-                {/if}
-                <!-- TODO replace alt with fallback profile icon -->
+        <div
+            class="flex bg-gray-800 max-w-250 mx-auto rounded-2xl my-10 text-white"
+        >
+            <div id="icon-div" class="relative m-5 mb-8 w-1/4">
                 <img
                     id="icon"
                     src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/{summoner.iconId}.jpg"
@@ -259,73 +250,96 @@
                     class="rounded-full"
                     on:error={(event) => displayAltIcon(event)}
                 />
-            </div>
-            <div id="ign-tag-div">
-                <h2 id="ign">{summoner.gameName}</h2>
-                <p id="tag">{summoner.tagLine}</p>
-            </div>
-            <p id="level">{summoner.level}</p>
-            <p id="server">{summoner.server}</p>
-        </div>
-
-        <div id="rank-div">
-            <select
-                id="rank-type-select"
-                bind:this={rankTypeSelect}
-                on:change={onRankTypeSelectChange}
-            >
-                <option value={RANKED_SOLO_LEAGUE}>Ranked Solo/Duo</option>
-                <option value={RANKED_FLEX_LEAGUE}>Ranked Flex</option>
-            </select>
-            <div id="current-rank-div">
-                {#if selectedRankType == RANKED_SOLO_LEAGUE}
-                    {#if summoner.soloLeague}
-                        <p id="rank-p">
-                            {summoner.soloLeague?.tier +
-                                " " +
-                                summoner.soloLeague?.rank +
-                                " " +
-                                summoner.soloLeague?.leaguePoints} LP
-                        </p>
-                        <p id="winrate-p">
-                            {summoner.soloLeague?.wins} wins / {summoner
-                                .soloLeague?.losses} losses ({Math.round(
-                                (Number(summoner.soloLeague?.wins!) /
-                                    (Number(summoner.soloLeague?.losses!) +
-                                        Number(summoner.soloLeague?.wins!))) *
-                                    100,
-                            )}% winrate)
-                        </p>
-                    {:else}
-                        <!-- TODO better with css -->
-                        <p>Summoner is unranked</p>
-                    {/if}
-                {:else if selectedRankType == RANKED_FLEX_LEAGUE}
-                    {#if summoner.flexLeague}
-                        <p id="rank-p">
-                            {summoner.flexLeague?.tier +
-                                " " +
-                                summoner.flexLeague?.rank +
-                                " " +
-                                summoner.flexLeague?.leaguePoints} LP
-                        </p>
-                        <p id="winrate-p">
-                            {summoner.flexLeague?.wins} wins / {summoner
-                                .flexLeague?.losses} losses ({Math.round(
-                                (Number(summoner.flexLeague?.wins!) /
-                                    (Number(summoner.flexLeague?.losses!) +
-                                        Number(summoner.flexLeague?.wins!))) *
-                                    100,
-                            )}% winrate)
-                        </p>
-                    {:else}
-                        <p>Summoner is unranked</p>
-                    {/if}
+                {#if summonerHighestTier !== null}
+                    <!-- TODO -->
+                    <!-- <img
+                        id="rank-icon"
+                        src="https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-{summonerHighestTier.toLowerCase()}.png"
+                        alt="rank icon not found"
+                        on:error={(event) => displayAltIcon(event)}
+                    /> -->
                 {/if}
+                <p
+                    id="level"
+                    class="absolute top-60 left-27 rounded-lg bg-gray-900 border-1 px-1"
+                >
+                    {summoner.level}
+                </p>
+            </div>
+            <div class="flex flex-col justify-center mx-auto">
+                <div id="ign-tag-div" class="flex">
+                    <h2 id="ign" class="text-3xl font-bold">{summoner.gameName}</h2>
+                    <p id="tag" class="text-3xl text-gray-400 font-bold">#{summoner.tagLine}</p>
+                </div>
+                <p id="server" class="text-gray-400">{summoner.server.replace(/\b\w/g, (char) => char.toUpperCase())} server</p>
+            </div>
+            <div id="rank-div" class="flex flex-col justify-center text-center mx-auto">
+                <select
+                    id="rank-type-select"
+                    bind:this={rankTypeSelect}
+                    on:change={onRankTypeSelectChange}
+                    class="dark:bg-gray-700 dark:text-white p-1 rounded-lg m-3 hover:dark:bg-gray-700"
+                >
+                    <option value={RANKED_SOLO_LEAGUE}>Ranked Solo/Duo</option>
+                    <option value={RANKED_FLEX_LEAGUE}>Ranked Flex</option>
+                </select>
+                <div id="current-rank-div">
+                    {#if selectedRankType == RANKED_SOLO_LEAGUE}
+                        {#if summoner.soloLeague}
+                            <p id="rank-p">
+                                {summoner.soloLeague?.tier +
+                                    " " +
+                                    summoner.soloLeague?.rank +
+                                    " " +
+                                    summoner.soloLeague?.leaguePoints} LP
+                            </p>
+                            <p id="winrate-p">
+                                {summoner.soloLeague?.wins} wins / {summoner
+                                    .soloLeague?.losses} losses ({Math.round(
+                                    (Number(summoner.soloLeague?.wins!) /
+                                        (Number(summoner.soloLeague?.losses!) +
+                                            Number(
+                                                summoner.soloLeague?.wins!,
+                                            ))) *
+                                        100,
+                                )}% winrate)
+                            </p>
+                        {:else}
+                            <p>Summoner is unranked</p>
+                        {/if}
+                    {:else if selectedRankType == RANKED_FLEX_LEAGUE}
+                        {#if summoner.flexLeague}
+                            <p id="rank-p">
+                                {summoner.flexLeague?.tier +
+                                    " " +
+                                    summoner.flexLeague?.rank +
+                                    " " +
+                                    summoner.flexLeague?.leaguePoints} LP
+                            </p>
+                            <p id="winrate-p">
+                                {summoner.flexLeague?.wins} wins / {summoner
+                                    .flexLeague?.losses} losses ({Math.round(
+                                    (Number(summoner.flexLeague?.wins!) /
+                                        (Number(summoner.flexLeague?.losses!) +
+                                            Number(
+                                                summoner.flexLeague?.wins!,
+                                            ))) *
+                                        100,
+                                )}% winrate)
+                            </p>
+                        {:else}
+                            <p>Summoner is unranked</p>
+                        {/if}
+                    {/if}
+                </div>
             </div>
         </div>
-
         <div id="matches" class="flex flex-col">
+            <h2
+                class="text-gray-900 dark:text-white font-bold text-center text-2xl my-5"
+            >
+                Recent Matches
+            </h2>
             {#each matches as match}
                 <div class="mx-auto">
                     <MatchComponent {match} {summoner} />

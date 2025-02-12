@@ -4,7 +4,7 @@ export interface Participant {
     puuid: string;
     champion: string;
     championId: number;
-    championLevel: number
+    championLevel: number;
     lane: string;
     items: Array<number>;
     kills: number;

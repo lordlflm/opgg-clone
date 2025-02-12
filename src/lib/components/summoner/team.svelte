@@ -43,11 +43,14 @@
             id="participant-anchor"
             class="{participant.teamId == winningTeam
                 ? 'bg-blue-400 hover:bg-blue-300'
-                : 'bg-red-400 hover:bg-red-300'} grid grid-cols-[2fr_1fr_1fr_2fr_3fr_2fr_2fr_2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-1 p-1 items-center max-w-250"
+                : 'bg-red-400 hover:bg-red-300'} grid grid-cols-[2fr_1fr_1fr_3fr_3fr_2fr_2fr_2fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-1 p-1 items-center max-w-250"
             rel="external"
             href="summoner?gameName={participant.gameName}&tagLine={participant.tagLine}&region={server}&puuid={participant.puuid}"
+            on:mouseenter={(e) => {
+                e.currentTarget.title = participant.gameName;
+            }}
         >
-            <div class="w-7/9">
+            <div class="relative w-7/9">
                 <img
                     id="participant-champion-icon"
                     src="https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champion-icons/{participant.championId}.png"
@@ -55,6 +58,13 @@
                     on:error={(event) => displayAltIcon(event)}
                     class="rounded-full ml-2"
                 />
+                <div
+                    class="absolute top-11 left-13 bg-gray-900 rounded-full text-center w-1/3 font-light text-xs border-1"
+                >
+                    <p>
+                        {participant.championLevel}
+                    </p>
+                </div>
             </div>
             <div
                 id="participant-summoner-spells-div"
@@ -103,7 +113,7 @@
                         id="secondary-rune-icon"
                         src="https://raw.communitydragon.org/10.1/game/assets/perks/styles/{secondaryRuneNameToAssetName(
                             styleIdToRuneName(
-                                participant.primaryStyleCategorieId,
+                                participant.secondaryStyleCategorieId,
                             ),
                         )}.png"
                         alt="Couldn't fetch secondary rune icon"
@@ -111,7 +121,7 @@
                     />
                 </div>
             </div>
-            <div class="flex flex-col items-center justify-center font-bold">
+            <div class="flex flex-col font-bold truncate">
                 <p id="participant-summoner-name-p">
                     {participant.gameName}
                 </p>

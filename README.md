@@ -6,10 +6,10 @@
 4. `npm run tauri dev`
 
 ## TODOs
+- change rank border summoner profile
 - too many icons arent found
 - make match fetching async in main.rs
 - participants rank
-- champion level in team.svelte
 
 ## Ideas
 - display top recently played champion for a summoner

@@ -39,19 +39,22 @@ export function queueIdToType(id: number) {
   let queueType = "Unknown";
   switch (id) {
     case 420:
-      queueType = "Ranked Solo/Duo"
+      queueType = "Ranked Solo/Duo";
       break;
     case 440:
-      queueType = "Ranked Flex"
+      queueType = "Ranked Flex";
       break;
     case 400:
-      queueType = "Normal Draft"
+      queueType = "Normal Draft";
+      break;
+    case 450:
+      queueType = "ARAM";
       break;
     case 700:
-      queueType = "Clash"
+      queueType = "Clash";
       break;
     case 900:
-      queueType = "URF"
+      queueType = "URF";
       break;
   }
   return queueType;
